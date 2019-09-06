@@ -18,16 +18,7 @@
 //
 // Create a card for each of the articles and add the card to the DOM.
 
-axios.get('https://lambda-times-backend.herokuapp.com/articles')
-.then (res =>{
-    console.log(res);
-    res.data.articles.forEach(obj =>{
-        obj.forEach(e =>{
-            let newCard = createCard(e);
-            cards.appendChild(newCard);
-        })
-    })
-})
+
 
 function createCard(object){
 
@@ -35,7 +26,7 @@ function createCard(object){
     const headline = document.createElement('div');
     const author = document.createElement('div');
     const imgContainer = document.createElement('div');
-    const img = document.createElement('img');
+    const cardImg = document.createElement('img');
     const by = document.createElement('span');
 
     card.classList.add('card');
@@ -46,12 +37,54 @@ function createCard(object){
     card.appendChild(headline);
     card.appendChild(author);
     author.appendChild(imgContainer);
-    imgContainer.appendChild(img);
+    imgContainer.appendChild(cardImg);
     author.appendChild(by);
 
     headline.textContent = `${object.headline}`;
-    author.textContent = `${object.authorName}`;
-    img.src = `${object.authorPhoto}`;
+    author.textContent = `By ${object.authorName}`;
+    cardImg.src = `${object.authorPhoto}`;
+
+    return card;
 }
 
 const cards = document.querySelector('.cards-container');
+
+axios.get('https://lambda-times-backend.herokuapp.com/articles')
+.then (res =>{
+    console.log(res.data.articles);
+    let articles = Object.entries(res.data.articles);
+    console.log(articles);
+    let javascript = articles[0][1],
+         bootstrap = articles[1][1],
+         technology = articles[2][1],
+         jquery = articles[3][1],
+         node = articles[4][1];
+    console.log(javascript);
+    javascript.forEach(e=>{
+        let newCard = createCard(e)
+        cards.appendChild(newCard);
+    })
+    bootstrap.forEach(e=>{
+        let newCard = createCard(e)
+        cards.appendChild(newCard);
+    })
+    technology.forEach(e=>{
+        let newCard = createCard(e)
+        cards.appendChild(newCard);
+    })
+    jquery.forEach(e=>{
+        let newCard = createCard(e)
+        cards.appendChild(newCard);
+    })
+    node.forEach(e=>{
+        let newCard = createCard(e)
+        cards.appendChild(newCard);
+    })
+      
+        
+    })
+
+.catch(error =>{
+    document.querySelector('.cards-container').textContent = 'ERROR';
+    console.log(error);
+})
